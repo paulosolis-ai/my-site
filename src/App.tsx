@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, ComposedChart
 } from 'recharts'
-import { Zap, Activity, Sliders, Database, Globe, DollarSign, Droplet, Layers, ShieldCheck, ChevronRight, BookOpen, Settings, BarChart3, Plus, Trash2, CheckCircle2 } from 'lucide-react'
+import { Zap, Activity, Sliders, Database, Globe, DollarSign, Droplet, Layers, ShieldCheck, ChevronRight, ChevronLeft, BookOpen, Settings, BarChart3, Plus, Trash2, CheckCircle2, BadgeCheck, Cpu, TrendingUp } from 'lucide-react'
 import './App.css'
 
 interface DashboardStats {
@@ -36,7 +36,8 @@ interface MaintenanceLog {
 }
 
 function App() {
-  const [activeTab, setActiveTab] = useState('executive') // executive, operator, maintenance
+  const [activeTab, setActiveTab] = useState('home') // home, services, products, courses, contact
+  const [hydroTab, setHydroTab] = useState('executive') // executive, operator, maintenance, training (for the hydro product)
   const [execStats, setExecStats] = useState<DashboardStats | null>(null)
   const [latestTelemetry, setLatestTelemetry] = useState<UsageReading | null>(null)
   const [recommendation, setRecommendation] = useState<any>(null)
@@ -106,7 +107,7 @@ function App() {
       }
     }
     fetchData()
-    const interval = setInterval(fetchData, 10000)
+    const interval = setInterval(fetchData, 300000) // 5 minutes
     return () => clearInterval(interval)
   }, [API_URL])
 
@@ -562,61 +563,233 @@ function App() {
     </div>
   )
 
-  return (
-    <div className="app">
-      <header>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div className="logo-container">
-            <Zap size={32} color="#38bdf8" />
-            <h2 style={{ margin: 0, letterSpacing: '1px' }}>HYDRO DECISION AI</h2>
-          </div>
-          <nav>
-            <span className={`nav-link ${activeTab === 'executive' ? 'active' : ''}`} onClick={() => setActiveTab('executive')}>
-              <Layers size={18} /> Executive Panel
-            </span>
-            <span className={`nav-link ${activeTab === 'operator' ? 'active' : ''}`} onClick={() => setActiveTab('operator')}>
-              <Sliders size={18} /> Operator Terminal
-            </span>
-            <span className={`nav-link ${activeTab === 'maintenance' ? 'active' : ''}`} onClick={() => setActiveTab('maintenance')}>
-              <Globe size={18} /> Global Strategy
-            </span>
-            <span className={`nav-link ${activeTab === 'training' ? 'active' : ''}`} onClick={() => setActiveTab('training')}>
-              <BookOpen size={18} /> AI Training
-            </span>
-          </nav>
-        </div>
-      </header>
-
-      <section className="hero compact">
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <h1>{activeTab === 'executive' ? 'Fleet Performance & Profitability' : activeTab === 'operator' ? 'Real-Time Dispatch Optimization' : activeTab === 'training' ? 'AI Knowledge & Config' : 'Global Failure Prediction Network'}</h1>
-            <p>Strategic Intelligence for the Modern Power Grid.</p>
-          </div>
-          <div className="breadcrumb">
-            Hydro AI <ChevronRight size={14} /> {activeTab.toUpperCase()}
+  const renderLandingView = () => (
+    <div className="landing-view">
+      <section className="landing-hero">
+        <div className="container">
+          <BadgeCheck color="var(--primary)" size={48} />
+          <h1>Innovating with Intelligence</h1>
+          <p className="hero-subtitle">Paulogic AI provides state-of-the-art artificial intelligence solutions to transform your enterprise. From predictive maintenance to complex decision systems.</p>
+          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '3rem' }}>
+            <button className="btn-primary" onClick={() => setActiveTab('services')}>Explore Services</button>
+            <button className="btn-outline" onClick={() => setActiveTab('products')}>Our Products</button>
           </div>
         </div>
       </section>
 
-      <main className="container">
-        {loading ? (
-          <div className="loader-container">
-            <div className="loader"></div>
-            <p>Synchronizing with SCADA & Global Intelligence...</p>
+      <section className="landing-section">
+        <div className="container">
+          <h2 className="section-title">Core Expertise</h2>
+          <div className="landing-grid">
+            <div className="feature-card">
+              <Cpu color="var(--primary)" size={40} />
+              <h3>AI Strategy</h3>
+              <p>Tailored roadmaps for integrating AI into your business processes.</p>
+            </div>
+            <div className="feature-card">
+              <Zap color="var(--primary)" size={40} />
+              <h3>LLM Customization</h3>
+              <p>Specialized language models trained on your proprietary data.</p>
+            </div>
+            <div className="feature-card">
+              <TrendingUp color="var(--primary)" size={40} />
+              <h3>Predictive Analytics</h3>
+              <p>Forecasting demand and optimizing operations with precision.</p>
+            </div>
           </div>
-        ) : (
-          activeTab === 'executive' ? renderExecutiveView() :
-            activeTab === 'operator' ? renderOperatorView() :
-              activeTab === 'training' ? renderTrainingView() :
-                renderMaintenanceView()
-        )}
+        </div>
+      </section>
+    </div>
+  )
+
+  const renderServicesView = () => (
+    <div className="container" style={{ padding: '6rem 0' }}>
+      <h1>Our AI Services</h1>
+      <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '4rem' }}>Empowering businesses through cutting-edge technology.</p>
+      <div className="landing-grid">
+        {[
+          { title: "Generative AI Implementation", desc: "Embed the power of GPT and other models into your workflow." },
+          { title: "Computer Vision", desc: "Analyze visual data in real-time for security and quality control." },
+          { title: "AI Automation", desc: "Automate repetitive tasks with intelligent agent systems." },
+          { title: "Data Engineering", desc: "Build robust pipelines to fuel your AI transformations." },
+          { title: "Custom Dashboarding", desc: "Visualize AI insights through premium interactive interfaces." },
+          { title: "Security Auditing", desc: "Ensure your AI implementations are secure and ethical." }
+        ].map(s => (
+          <div className="card" key={s.title}>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const renderProductsView = () => (
+    <div className="container" style={{ padding: '6rem 0' }}>
+      <h1>Paulogic Ecosystem</h1>
+      <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '4rem' }}>Scalable products designed for enterprise-grade performance.</p>
+      
+      <div className="product-showcase" onClick={() => setActiveTab('hydro')}>
+        <div className="product-content">
+          <div className="logo-container" style={{ marginBottom: '1rem' }}>
+            <Zap size={32} color="#38bdf8" />
+            <h2 style={{ margin: 0 }}>HYDRO DECISION AI</h2>
+          </div>
+          <p>The premier solution for water management and energy dispatch optimization. Powered by real-time SCADA telemetry and predictive ML service.</p>
+          <button className="btn-primary" style={{ marginTop: '2rem' }}>Open Application</button>
+        </div>
+        <div className="product-preview">
+          <div className="preview-mesh"></div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderCoursesView = () => (
+    <div className="container" style={{ padding: '6rem 0' }}>
+      <h1>AI Education & Academy</h1>
+      <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '4rem' }}>Master the future of technology with our expert-led courses.</p>
+      <div className="landing-grid">
+        <div className="card">
+          <BadgeCheck color="var(--primary)" size={32} />
+          <h3>AI Mastery for Professionals</h3>
+          <p>8-week intensive on building and deploying AI systems.</p>
+          <button className="btn-outline" style={{ marginTop: '1rem', width: '100%' }}>Enroll Now</button>
+        </div>
+        <div className="card">
+          <Layers color="var(--primary)" size={32} />
+          <h3>Prompt Engineering Workshop</h3>
+          <p>Learn to communicate with large language models effectively.</p>
+          <button className="btn-outline" style={{ marginTop: '1rem', width: '100%' }}>Enroll Now</button>
+        </div>
+      </div>
+    </div>
+  )
+
+  const renderContactView = () => (
+    <div className="container" style={{ padding: '6rem 0', maxWidth: '800px' }}>
+      <h1 style={{ textAlign: 'center' }}>Contact Paulogic AI</h1>
+      <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '4rem' }}>Let's discuss how AI can transform your project.</p>
+      <div className="card" style={{ padding: '3rem' }}>
+        <div className="incident-form-grid">
+          <div className="form-group">
+            <label>FULL NAME</label>
+            <input type="text" placeholder="Your Name" />
+          </div>
+          <div className="form-group">
+            <label>EMAIL ADDRESS</label>
+            <input type="email" placeholder="email@example.com" />
+          </div>
+          <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+            <label>MESSAGE</label>
+            <textarea rows={5} placeholder="Tell us about your needs..."></textarea>
+          </div>
+        </div>
+        <button className="btn-primary" style={{ width: '100%', marginTop: '2rem' }}>Send Message</button>
+      </div>
+    </div>
+  )
+
+  if (activeTab === 'hydro') {
+    return (
+      <div className="app">
+        <header>
+          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="logo-container" onClick={() => setActiveTab('products')} style={{ cursor: 'pointer' }}>
+              <ChevronLeft size={24} color="var(--text-secondary)" />
+              <Zap size={32} color="#38bdf8" />
+              <h2 style={{ margin: 0, letterSpacing: '1px' }}>HYDRO DECISION AI</h2>
+            </div>
+            <nav>
+              <span className={`nav-link ${hydroTab === 'executive' ? 'active' : ''}`} onClick={() => setHydroTab('executive')}>
+                <Layers size={18} /> Executive Panel
+              </span>
+              <span className={`nav-link ${hydroTab === 'operator' ? 'active' : ''}`} onClick={() => setHydroTab('operator')}>
+                <Sliders size={18} /> Operator Terminal
+              </span>
+              <span className={`nav-link ${hydroTab === 'maintenance' ? 'active' : ''}`} onClick={() => setHydroTab('maintenance')}>
+                <Globe size={18} /> Global Strategy
+              </span>
+              <span className={`nav-link ${hydroTab === 'training' ? 'active' : ''}`} onClick={() => setHydroTab('training')}>
+                <BookOpen size={18} /> AI Training
+              </span>
+            </nav>
+          </div>
+        </header>
+
+        <section className="hero compact">
+          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div>
+              <h1>{hydroTab === 'executive' ? 'Fleet Performance & Profitability' : hydroTab === 'operator' ? 'Real-Time Dispatch Optimization' : hydroTab === 'training' ? 'AI Knowledge & Config' : 'Global Failure Prediction Network'}</h1>
+              <p>Strategic Intelligence for the Modern Power Grid.</p>
+            </div>
+            <div className="breadcrumb">
+              Paulogic AI <ChevronRight size={14} /> Hydro AI <ChevronRight size={14} /> {hydroTab.toUpperCase()}
+            </div>
+          </div>
+        </section>
+
+        <main className="container">
+          {loading ? (
+            <div className="loader-container">
+              <div className="loader"></div>
+              <p>Synchronizing with SCADA & Global Intelligence...</p>
+            </div>
+          ) : (
+            hydroTab === 'executive' ? renderExecutiveView() :
+              hydroTab === 'operator' ? renderOperatorView() :
+                hydroTab === 'training' ? renderTrainingView() :
+                  renderMaintenanceView()
+          )}
+        </main>
+
+        <footer>
+          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.6 }}>
+            <p>© 2026 PAULOGIC AI SERVICES</p>
+            <p>Hydro Division • SCADA v4.2.1 • Global Sync Active</p>
+          </div>
+        </footer>
+      </div>
+    )
+  }
+
+  return (
+    <div className="app">
+      <header>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="logo-container" onClick={() => setActiveTab('home')} style={{ cursor: 'pointer' }}>
+            <Cpu size={32} color="#38bdf8" />
+            <h2 style={{ margin: 0, fontWeight: 800 }}>PAULOGIC AI</h2>
+          </div>
+          <nav>
+            <span className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>Home</span>
+            <span className={`nav-link ${activeTab === 'services' ? 'active' : ''}`} onClick={() => setActiveTab('services')}>Services</span>
+            <span className={`nav-link ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}>Products</span>
+            <span className={`nav-link ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => setActiveTab('courses')}>Courses</span>
+            <span className={`nav-link ${activeTab === 'contact' ? 'active' : ''}`} onClick={() => setActiveTab('contact')}>Contact</span>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        {activeTab === 'home' ? renderLandingView() :
+          activeTab === 'services' ? renderServicesView() :
+            activeTab === 'products' ? renderProductsView() :
+              activeTab === 'courses' ? renderCoursesView() :
+                renderContactView()
+        }
       </main>
 
       <footer>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.6 }}>
-          <p>© 2026 HYDRO GEN INTELLIGENCE</p>
-          <p>Integrated SCADA v4.2.1 • Global Sync Active</p>
+        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', opacity: 0.6, padding: '4rem 0' }}>
+          <div>
+            <h3 style={{ marginBottom: '1rem' }}>PAULOGIC AI</h3>
+            <p>Advancing Intelligence for the Enterprise.</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <p>© 2026 Paulogic AI Intelligence Services.</p>
+            <p>Global Headquarters • Silicon sync active</p>
+          </div>
         </div>
       </footer>
     </div>
